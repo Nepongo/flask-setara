@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Setara API & APP - Indonesian Sign Language</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4DD3FF;
+      --primary-dark: #00A2CC;
+      --accent: #fff;
+      --text-primary: #212121;
+      --text-secondary: #757575;
+      --bg-light: #F0FBFF;
+      --card-radius: 24px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(135deg, #F0FBFF 0%, #B2E9FF 100%);
+      margin: 0;
+      color: var(--text-primary);
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 32px 48px 0 48px;
+      background: transparent;
+    }
+    .logo img {
+      height: 32px;
+      vertical-align: middle;
+    }
+    nav {
+      display: flex;
+      gap: 32px;
+    }
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    nav a:hover {
+      color: var(--primary-dark);
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 16px;
+    }
+    .hero {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px;
+      align-items: flex-start;
+      margin-bottom: 48px;
+    }
+    .hero-left {
+      flex: 1 1 340px;
+      min-width: 320px;
+    }
+    .hero-left h1 {
+      font-size: 2.6rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+    .hero-left p {
+      font-size: 1.2rem;
+      margin-bottom: 24px;
+      color: var(--text-secondary);
+    }
+    .hero-left p b {
+      color: var(--primary-dark);
+      font-weight: 600;
+    }
+    .hero-left .get-btn {
+      background: var(--primary);
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 16px;
+      padding: 16px 32px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      margin-bottom: 16px;
+    }
+    .hero-left .get-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px) scale(1.03);
+    }
+    .hero-left .qr-app {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 8px;
+      font-size: 0.98rem;
+      color: var(--text-secondary);
+    }
+    .hero-left .qr-app img {
+      width: 56px;
+      height: 56px;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      background: #fff;
+    }
+    .hero-right {
+      flex: 1 1 420px;
+      min-width: 340px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .webcam-card {
+      background: #e9eef2;
+      border-radius: var(--card-radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    .webcam-frame {
+      width: 320px;
+      height: 220px;
+      background: #d1dbe3;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+    .webcam-frame video, .webcam-frame canvas {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 18px;
+      display: block;
+    }
+    .webcam-frame .camera-icon {
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%,-50%);
+      opacity: 0.3;
+      font-size: 64px;
+      pointer-events: none;
+    }
+    .webcam-controls {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+    .webcam-controls label {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+      margin-left: 8px;
+    }
+    .webcam-controls input[type="checkbox"] {
+      accent-color: var(--primary);
+      width: 20px; height: 20px;
+    }
+    .translation-result {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      padding: 16px 20px;
+      width: 100%;
+      min-height: 48px;
+      font-size: 1.2rem;
+      color: var(--primary-dark);
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 8px;
+      transition: background 0.2s;
+    }
+    .webcam-card .status {
+      font-size: 0.98rem;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+      text-align: center;
+    }
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 48px 0 16px 0;
+      text-align: center;
+      color: var(--text-primary);
+    }
+    .pricing-row {
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 48px;
+    }
+    .pricing-card {
+      background: #fff;
+      border-radius: var(--card-radius);
+      box-shadow: var(--shadow);
+      padding: 32px 24px;
+      min-width: 240px;
+      max-width: 320px;
+      flex: 1 1 240px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      transition: box-shadow 0.2s, transform 0.1s;
+    }
+    .pricing-card:hover {
+      box-shadow: 0 8px 32px rgba(77,211,255,0.15);
+      transform: translateY(-2px) scale(1.03);
+    }
+    .pricing-card h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--primary-dark);
+    }
+    .pricing-card ul {
+      margin: 0 0 12px 0;
+      padding: 0 0 0 18px;
+      font-size: 1rem;
+      color: var(--text-secondary);
+    }
+    .pricing-card ul li {
+      margin-bottom: 4px;
+    }
+    .pricing-card .price {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+    }
+    .pricing-card .pricing-btn {
+      background: var(--primary);
+      color: var(--accent);
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 24px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .pricing-card .pricing-btn:hover {
+      background: var(--primary-dark);
+      transform: scale(1.04);
+    }
+    .about-section {
+      max-width: 800px;
+      margin: 0 auto 48px auto;
+      background: #fff;
+      border-radius: var(--card-radius);
+      box-shadow: var(--shadow);
+      padding: 32px 24px;
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+    }
+    .about-section h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    .contact-section {
+      max-width: 600px;
+      margin: 0 auto 48px auto;
+      background: #fff;
+      border-radius: var(--card-radius);
+      box-shadow: var(--shadow);
+      padding: 32px 24px;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      text-align: center;
+    }
+    .contact-section h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 12px;
+    }
+    .contact-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+      margin-top: 16px;
+      font-size: 1.1rem;
+    }
+    .contact-list .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-primary);
+    }
+    .contact-list .contact-item .icon {
+      font-size: 1.3rem;
+      color: #25D366;
+    }
+    .contact-list .contact-item .icon.mail {
+      color: #EA4335;
+    }
+    @media (max-width: 900px) {
+      .hero { flex-direction: column; align-items: stretch; }
+      .hero-right { align-items: stretch; }
+      header { padding: 24px 16px 0 16px; }
+      .container { padding: 24px 8px; }
+      .section-title { font-size: 1.5rem; }
+    }
+    @media (max-width: 600px) {
+      .webcam-card { max-width: 100%; padding: 12px; }
+      .webcam-frame { width: 100%; height: 180px; }
+      .hero-left h1 { font-size: 1.5rem; }
+      .section-title, .about-section h2, .contact-section h2 { font-size: 1.2rem; }
+      .pricing-row { gap: 12px; }
+      .pricing-card { padding: 18px 8px; min-width: 180px; }
+    }
+  </style>
+  <!-- Font Awesome for icons -->
+  <script src="https://kit.fontawesome.com/7e8e6e2b1a.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="logo_setara_text.png" alt="Setara Logo" />
+    </div>
+    <nav>
+      <a href="#pricing" class="nav-link">Pricing</a>
+      <a href="#about" class="nav-link">About Us</a>
+      <a href="#contact" class="nav-link">Contact</a>
+    </nav>
+  </header>
+  <div class="container">
+    <section class="hero">
+      <div class="hero-left">
+        <h1>Setara API</h1>
+        <p>
+          Create an <b>inclusive work environment</b> and Break Down the Silent Walls in <b>Real-Time!</b>
+        </p>
+        <button class="get-btn" id="getItNowBtn">Get It Now!</button>
+        <div class="qr-app">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=56x56&data=https://drive.google.com/file/d/13PpMIvZPMdKTZm85qtKEGxV7DtzWpCaP/view?usp=drive_link" alt="QR Setara APP">
+          <span>Try the <b>Setara APP</b> on your Android device!</span>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="webcam-card">
+          <div class="webcam-frame" id="webcam-frame">
+            <span class="camera-icon"><i class="fas fa-camera"></i></span>
+            <video id="webcam" autoplay playsinline muted style="display:none"></video>
+          </div>
+          <div class="webcam-controls">
+            <button id="startWebcam" class="get-btn" style="padding:8px 18px;font-size:1rem;">Start Webcam</button>
+          </div>
+          <div class="status" id="webcam-status">Webcam is inactive</div>
+          <div class="translation-result" id="translation-result">Translation will appear here...</div>
+        </div>
+      </div>
+    </section>
+
+    <div id="pricing"></div>
+    <div class="section-title">Pricing</div>
+    <div class="pricing-row">
+      <div class="pricing-card">
+        <h3>Developer</h3>
+        <ul>
+          <li>Access to Setara's core API endpoints</li>
+          <li>Up to 10,000 API calls per month</li>
+          <li>Standard rate limits</li>
+          <li>Community forum & email support (48h response)</li>
+        </ul>
+        <div class="price">Free</div>
+        <button class="pricing-btn" onclick="window.open('https://wa.me/6282219002336','_blank')">Try For Free!</button>
+      </div>
+      <div class="pricing-card">
+        <h3>Growth</h3>
+        <ul>
+          <li>Premium API endpoints</li>
+          <li>Up to 500,000 API calls/month</li>
+          <li>High rate limits, 99.5% uptime SLA</li>
+          <li>Team features, priority support (8h response)</li>
+        </ul>
+        <div class="price">IDR 10M/Month</div>
+        <button class="pricing-btn" onclick="window.open('https://wa.me/6282219002336','_blank')">Buy Now!</button>
+      </div>
+      <div class="pricing-card">
+        <h3>Enterprise</h3>
+        <ul>
+          <li>Premium API endpoints</li>
+          <li>Customizable API call limits</li>
+          <li>99.9% uptime SLA</li>
+          <li>Dedicated account manager, 24/7 support</li>
+        </ul>
+        <div class="price">Custom Pricing</div>
+        <button class="pricing-btn" onclick="window.open('https://wa.me/6282219002336','_blank')">I WANT THIS!</button>
+      </div>
+    </div>
+
+    <div id="about"></div>
+    <section class="about-section">
+      <h2>About Us</h2>
+      <p>
+        Setara is a technology-driven social enterprise developing an AI-powered translation platform for Indonesian Sign Language (BISINDO).
+      </p>
+      <p>
+        Our mission is to break down fundamental communication barriers in Indonesia. We achieve this through two main pillars: the Setara API and the Setara APP.
+      </p>
+    </section>
+
+    <div id="contact"></div>
+    <section class="contact-section">
+      <h2>Let's get in touch</h2>
+      <div class="contact-list">
+        <div class="contact-item">
+          <span class="icon"><i class="fab fa-whatsapp"></i></span>
+          <span>+6282219002336 (Nevin)</span>
+        </div>
+        <div class="contact-item">
+          <span class="icon mail"><i class="fas fa-envelope"></i></span>
+          <span>setara.sea@gmail.com</span>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+    // Smooth scroll for navbar
+    document.querySelectorAll('nav a').forEach(link => {
+  link.onclick = function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      window.scrollTo({ top: target.offsetTop - 40, behavior: 'smooth' });
+    }
+  };
+});
+
+// Get It Now button scroll to pricing
+document.getElementById('getItNowBtn').onclick = function() {
+  document.querySelector('a[href="#pricing"]').click();
+};
+
+// Webcam + MediaPipe Hands integration
+let webcamStream = null;
+let hands = null;
+let camera = null;
+const webcamBtn = document.getElementById('startWebcam');
+const webcamVideo = document.getElementById('webcam');
+const webcamFrame = document.getElementById('webcam-frame');
+const translationResult = document.getElementById('translation-result');
+const webcamStatus = document.getElementById('webcam-status');
+
+webcamBtn.onclick = async function() {
+  if (webcamStream) {
+    webcamStream.getTracks().forEach(track => track.stop());
+    webcamStream = null;
+    webcamVideo.style.display = 'none';
+    webcamFrame.querySelector('.camera-icon').style.display = '';
+    translationResult.textContent = 'Translation will appear here...';
+    webcamStatus.textContent = 'Webcam is inactive';
+    webcamBtn.textContent = 'Start Webcam';
+    if (camera) camera.stop();
+    return;
+  }
+  try {
+    webcamStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+    webcamVideo.srcObject = webcamStream;
+    webcamVideo.style.display = '';
+    webcamFrame.querySelector('.camera-icon').style.display = 'none';
+    webcamStatus.textContent = 'Webcam is active';
+    webcamBtn.textContent = 'Stop Webcam';
+
+    // Setup MediaPipe Hands
+    hands = new Hands({
+      locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+    });
+    hands.setOptions({
+      maxNumHands: 2,
+      modelComplexity: 1,
+      minDetectionConfidence: 0.7,
+      minTrackingConfidence: 0.7
+    });
+    hands.onResults(onResults);
+
+    camera = new Camera(webcamVideo, {
+      onFrame: async () => {
+        await hands.send({image: webcamVideo});
+      },
+      width: 320,
+      height: 220
+    });
+    camera.start();
+  } catch (e) {
+    webcamStatus.textContent = 'Failed to access webcam';
+  }
+};
+
+function onResults(results) {
+  if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+    let features = new Array(126).fill(0);
+    if (results.multiHandLandmarks.length === 1) {
+      let hand = results.multiHandLandmarks[0];
+      let wrist = hand[0];
+      hand.forEach((lm, i) => {
+        features[i*3+63] = lm.x - wrist.x;
+        features[i*3+64] = lm.y - wrist.y;
+        features[i*3+65] = lm.z - wrist.z;
+      });
+    } else if (results.multiHandLandmarks.length === 2) {
+      let handsSorted = results.multiHandLandmarks.sort((a,b) => a[0].x - b[0].x);
+      let leftHand = handsSorted[0], rightHand = handsSorted[1];
+      let wristL = leftHand[0], wristR = rightHand[0];
+      leftHand.forEach((lm, i) => {
+        features[i*3] = lm.x - wristL.x;
+        features[i*3+1] = lm.y - wristL.y;
+        features[i*3+2] = lm.z - wristL.z;
+      });
+      rightHand.forEach((lm, i) => {
+        features[i*3+63] = lm.x - wristR.x;
+        features[i*3+64] = lm.y - wristR.y;
+        features[i*3+65] = lm.z - wristR.z;
+      });
+    }
+   sendToBackend(features, 'alphabet');
+  } else {
+    translationResult.textContent = 'No hand detected';
+  }
+}
+
+async function sendToBackend(features, mode) {
+  try {
+    const response = await fetch('http://127.0.0.1:5000/api/predict', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({landmarks: features, mode})
+    });
+    const result = await response.json();
+    translationResult.textContent = result.text + (result.confidence ? ` (${(result.confidence*100).toFixed(1)}%)` : '');
+  } catch (err) {
+    translationResult.textContent = 'Translation error';
+  }
+}
+
+    // You need to implement getHandLandmarksFromVideo() using MediaPipe Hands JS
+    // and setup backend endpoint /api/predict to run your TFLite model in Python.
+  </script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+</body>
+</html>
