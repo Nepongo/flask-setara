@@ -3,12 +3,16 @@ import numpy as np
 import tensorflow as tf
 from flask_cors import CORS
 
+# ... import Anda ...
 app = Flask(__name__)
 CORS(app)
 
 @app.route('/')
-def home():
-return render_template('index.html')
+def home(): # <-- Ini Baris 10
+    # Beri satu Tab atau 4 spasi di sini
+    return render_template('index.html') # <-- Ini Baris 11 (BENAR)
+
+# ... sisa kode Anda ...
 
 # Load TFLite models
 alphabet_interpreter = tf.lite.Interpreter(model_path="assets/alphabet_model_dnn.tflite")
