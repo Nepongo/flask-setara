@@ -1,10 +1,14 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import numpy as np
 import tensorflow as tf
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
+
+@app.route('/')
+def home():
+return render_template('index.html')
 
 # Load TFLite models
 alphabet_interpreter = tf.lite.Interpreter(model_path="assets/alphabet_model_dnn.tflite")
